@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.String;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.*;
 
 public class Core {
@@ -13,7 +15,7 @@ public class Core {
     {
         System.out.println("Init core..");
         setServices(loadAllServices());
-        isAliveServices(getServices());
+        isReachableServices(getServices());
     }
 
     public Core(String argument)
@@ -62,12 +64,32 @@ public class Core {
     /**
      * change bool to reason phrase
      */
-    public boolean isAliveServices(ArrayList<Object> services) {
-        /* TODO */
-        return true;
+    public boolean isReachableServices(ArrayList<Object> services) {
+        Vector<Boolean> validateHosts = new Vector<Boolean>();
+        for (Object obj : services) {
+            String hostname = obj.toString();
+            try {
+                validateHosts.add(InetAddress.getByName(hostname).isReachable(100));
+            } catch (UnknownHostException e) {
+                validateHosts.add(false);
+            } catch (IOException e) {
+                validateHosts.add(false);
+            }
+        }
+        return checkIsAllInArrayTrue(validateHosts);
     }
 
     public void setServices(ArrayList<Object> services) {
         this.services = services;
+    }
+
+    public boolean checkIsAllInArrayTrue(Vector<Boolean> data)
+    {
+        boolean result = true;
+        for (Boolean bool : data)
+        {
+            result &= bool;
+        }
+        return result;
     }
 }
