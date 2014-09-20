@@ -27,7 +27,7 @@ public class CoreTest {
     @Test
     public void testAliveChecker()
     {
-        assertTrue(getCore().isAliveServices(getCore().loadAllServices()));
+        assertTrue(getCore().isReachableServices(getCore().loadAllServices()));
     }
 
     public Core getCore() {
